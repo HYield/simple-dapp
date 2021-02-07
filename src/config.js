@@ -16,6 +16,7 @@ export default Object.freeze({
         BLOCK_ACTIVATED: 1606599919,
         VAULT_STATUS: "active",
     },
+    /*
     'ICreamBNBFarm' : {
         TITLE: "ICreamBNBFarm",
         LOGO: "🍦💰",
@@ -29,4 +30,5 @@ export default Object.freeze({
         BLOCK_ACTIVATED: 1606599919,
         VAULT_STATUS: "active",
     }
+    */
 })
