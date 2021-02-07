@@ -7,7 +7,7 @@
     div.column.is-one-quarter 📢 <strong>DISCLAIMER</strong> When you transfer and deposit, your ETH will be converted into stETH 1:1 and deposit in the vault. You will not be able to redeem stETH for ETH until txs are enables in ETH2.0.
   div Vault:&nbsp;
     a(
-      :href="'https://etherscan.io/address/' + config.VAULT_ADDR + '#code'",
+      :href="'https://bscscan.com/address/' + config.VAULT_ADDR + '#code'",
       target="_blank"
     ) 📃Contract
   div Version: {{ vault_version }}
@@ -242,7 +242,7 @@ export default {
       this.username = await resolver.methods.name(namehash).call();
     },
     get_block_timestamp(timestamp) {
-      return axios.get(`https://api.etherscan.io/api?module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before&apikey=JXRIIVMTAN887F9D7NCTVQ7NMGNT1A4KA3`)      
+      return axios.get(`https://api.bscscan.com/api?module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before&apikey=JXRIIVMTAN887F9D7NCTVQ7NMGNT1A4KA3`)      
     },
     call(contract, method, args, out = "number") {
       let key = this.drizzleInstance.contracts[contract].methods[

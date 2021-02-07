@@ -7,7 +7,7 @@
       info-message(:status="config.VAULT_STATUS")
   div Vault:&nbsp;
     a(
-      :href="'https://etherscan.io/address/' + config.VAULT_ADDR + '#code'",
+      :href="'https://bscscan.com/address/' + config.VAULT_ADDR + '#code'",
       target="_blank"
     ) 📃Contract
   div Version: {{ vault_version }}
@@ -25,7 +25,7 @@
     div <strong> Strat. {{ index }}: </strong> {{ strategy.name }}
     div Address:&nbsp;
       a(
-        :href="'https://etherscan.io/address/' + strategy.address + '#code'",
+        :href="'https://bscscan.com/address/' + strategy.address + '#code'",
         target="_blank"
       ) 📃Contract
   div.spacer
@@ -291,7 +291,7 @@ export default {
       }
     },
     get_block_timestamp(timestamp) {
-      return axios.get(`https://api.etherscan.io/api?module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before&apikey=JXRIIVMTAN887F9D7NCTVQ7NMGNT1A4KA3`)      
+      return axios.get(`https://api.bscscan.com/api?module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before&apikey=JXRIIVMTAN887F9D7NCTVQ7NMGNT1A4KA3`)      
     },
     call(contract, method, args, out = "number") {
       let key = this.drizzleInstance.contracts[contract].methods[
