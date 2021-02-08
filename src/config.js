@@ -16,6 +16,20 @@ export default Object.freeze({
         BLOCK_ACTIVATED: 1606599919,
         VAULT_STATUS: "active",
     },
+    'ICreamStaker' : {
+        TITLE: "ICreamStaker",
+        LOGO: "🍦💰",
+        VAULT_ABI: yVaultV2,
+        VAULT_TYPE: 'yearn',
+        VAULT_ADDR: "0xDD715A2537aAc71317e07BF28655DA51f0897Bd7",
+        WANT_ADDR: "0x58f651DDE51CAa87c4111B16ee0A6Fab061Ee564",
+        WANT_SYMBOL: "iCream",
+        COINGECKO_SYMBOL: "",
+        VAULT_DEV : "akshaynexust",
+        BLOCK_ACTIVATED: 1606599919,
+        VAULT_STATUS: "active",
+    }
+
     /*
     'ICreamBNBFarm' : {
         TITLE: "ICreamBNBFarm",
