@@ -49,7 +49,7 @@ export default Object.freeze({
         VAULT_TYPE: 'yearn',
         VAULT_ADDR: "0x007109F96f9AA2523f283Faac074a1887EcCFF1a",
         WANT_ADDR: "0xc8FCBA816eF9B0c5bc03d9178CfCc7EF785B4f2f",
-        WANT_SYMBOL: "ICLP",
+        WANT_SYMBOL: "PLP",
         COINGECKO_SYMBOL: "",
         VAULT_DEV : "akshaynexust",
         BLOCK_ACTIVATED: 1606599919,
