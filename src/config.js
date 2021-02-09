@@ -28,15 +28,13 @@ export default Object.freeze({
         VAULT_DEV : "akshaynexust",
         BLOCK_ACTIVATED: 1606599919,
         VAULT_STATUS: "active",
-    }
-
-    /*
-    'ICreamBNBFarm' : {
-        TITLE: "ICreamBNBFarm",
+    },
+    'ICreamBNBLPFarm' : {
+        TITLE: "ICreamBNBLPFarm",
         LOGO: "🍦💰",
         VAULT_ABI: yVaultV2,
         VAULT_TYPE: 'yearn',
-        VAULT_ADDR: "0x3b2679c9AECf2111ea0169F6e5d21976EDB0E27A",
+        VAULT_ADDR: "0x8aA5279EA08A699860860fd492AC6469B19baEF5",
         WANT_ADDR: "0x792a46f30f1F6208b24C8199C3F2403f2Df06637",
         WANT_SYMBOL: "ICLP",
         COINGECKO_SYMBOL: "",
@@ -44,5 +42,4 @@ export default Object.freeze({
         BLOCK_ACTIVATED: 1606599919,
         VAULT_STATUS: "active",
     }
-    */
 })
