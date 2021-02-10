@@ -12,8 +12,6 @@
           v-card-text
             div Version: {{ vault_version }}
             div Performance Fee: {{ vault_perfFee }}%
-            div Deposit  Fee: {{ 0 }}%
-            div Withdraw Fee: {{ 0 }}%
             div {{ config.WANT_SYMBOL }} price (CoinGecko 🦎): {{ want_price | toCurrency(4) }}
             div Deposit Limit: {{ vault_deposit_limit | fromWei(2, vault_decimals) }}        {{ config.WANT_SYMBOL }}
             div Total Assets: {{ vault_total_assets | fromWei(2, vault_decimals) }}        {{ config.WANT_SYMBOL }}
@@ -22,8 +20,8 @@
             div Price Per Share: {{ vault_price_per_share | fromWei(8, vault_decimals) }}
             div Available limit: {{ vault_available_limit | fromWei(2, vault_decimals) }} {{ config.WANT_SYMBOL }}
             v-progress-linear(:value="progress_limit" height="20px") {{ Math.round(progress_limit) }}%
-          v-card-actions
-            v-btn <a :href="'https://bscscan.com/address/' + config.VAULT_ADDR + '#code'" target="_blank"> 📃Contract </a>
+            v-card-actions
+              v-btn <a :href="'https://bscscan.com/address/' + config.VAULT_ADDR + '#code'" target="_blank"> 📃Contract </a>
         div.spacer
         v-card
           v-card-title Strategies
@@ -47,26 +45,26 @@
                 v-card
                   v-card-title Manange
                   v-card-text
-                    div.spacer(v-if="want_balance > 0")
-                        v-text-field(v-if="want_balance > 0",v-model.number="amount", size="is-small", type="number",min=0,label="Deposit Amount")
+                    div.spacer
+                        v-text-field(v-model.number="amount", size="is-small", type="number",min=0,label="Deposit Amount")
                     span(v-if="vault_available_limit <= 0") Deposits closed.
-                    div.spacer(v-if="want_balance > 0")
-                    v-btn(
-                            v-if="vault_available_limit > 0",
-                            :disabled="has_allowance_vault",
-                            @click.prevent="on_approve_vault"
-                    ) {{ has_allowance_vault ? '✅ Approved' : '🚀 Approve Vault' }}
-                    v-btn(
-                            v-if="vault_available_limit > 0",
-                            :disabled="!has_allowance_vault",
-                            @click.prevent="on_deposit"
-                    ) 🏦 Deposit
-                    v-btn(
-                            v-if="vault_available_limit > 0",
-                            :disabled="!has_allowance_vault",
-                            @click.prevent="on_deposit_all"
-                    ) 🏦 Deposit All
-                    v-btn(:disabled="!has_yvtoken_balance", @click.prevent="on_withdraw_all") 💸 Withdraw All
+                    v-card-actions
+                      v-btn(
+                              v-if="vault_available_limit > 0 && !has_allowance_vault",
+                              :disabled="has_allowance_vault",
+                              @click.prevent="on_approve_vault"
+                      ) {{ has_allowance_vault ? '✅ Approved' : '🚀 Approve Vault' }}
+                      v-btn(
+                              v-if="vault_available_limit > 0",
+                              :disabled="!has_allowance_vault",
+                              @click.prevent="on_deposit"
+                      ) 🏦 Deposit
+                      v-btn(
+                              v-if="vault_available_limit > 0",
+                              :disabled="!has_allowance_vault",
+                              @click.prevent="on_deposit_all"
+                      ) 🏦 Deposit All
+                      v-btn(:disabled="!has_yvtoken_balance", @click.prevent="on_withdraw_all") 💸 Withdraw All
         div(v-else)
                 .red
                         span ⛔ You need {{ yfi_needed | fromWei(4) }} YFI more to enter the Citadel ⛔
@@ -78,7 +76,7 @@
                         v-btn(v-if="!has_allowance_bribe", @click.prevent="on_approve_bribe") 🚀 Approve Bribe
                 div(v-else)
                         span Remember Konami 🎮
-        .red(v-if="error")
+        v-alert(v-if="error" type="error")
                 span {{ error }}
         div.spacer
                 .muted
