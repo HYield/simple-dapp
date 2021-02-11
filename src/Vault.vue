@@ -17,9 +17,9 @@
             div Total Assets: {{ vault_total_assets | fromWei(2, vault_decimals) }}        {{ config.WANT_SYMBOL }}
             div Total AUM: {{ vault_total_aum | toCurrency(2, vault_decimals) }}
             div.spacer
-            div Daily APY : {{(this.roi / 7).toFixed(3)}}%
-            div Weekly APY : {{this.roi.toFixed(3)}}%
-            div Yearly APY : {{this.roi_year.toFixed(3)}}%
+            div Daily APY :  {{this.roi != undefined      ? (this.roi / 7).toFixed(3)} : 0}}%
+            div Weekly APY : {{this.roi != undefined      ? this.roi.toFixed(3)        : 0}}}%
+            div Yearly APY : {{this.roi_year != undefined ? this.roi_year.toFixed(3)   : 0 }}%
             div.spacer
             div Price Per Share: {{ vault_price_per_share | fromWei(8, vault_decimals) }}
             div Available limit: {{ vault_available_limit | fromWei(2, vault_decimals) }} {{ config.WANT_SYMBOL }}
