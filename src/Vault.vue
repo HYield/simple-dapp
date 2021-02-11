@@ -17,6 +17,10 @@
             div Total Assets: {{ vault_total_assets | fromWei(2, vault_decimals) }}        {{ config.WANT_SYMBOL }}
             div Total AUM: {{ vault_total_aum | toCurrency(2, vault_decimals) }}
             div.spacer
+            div Daily APY : {{(this.roi / 7).toFixed(3)}}%
+            div Weekly APY : {{this.roi.toFixed(3)}}%
+            div Yearly APY : {{this.roi_year.toFixed(3)}}%
+            div.spacer
             div Price Per Share: {{ vault_price_per_share | fromWei(8, vault_decimals) }}
             div Available limit: {{ vault_available_limit | fromWei(2, vault_decimals) }} {{ config.WANT_SYMBOL }}
             v-progress-linear(:value="progress_limit" height="20px") {{ Math.round(progress_limit) }}%
@@ -151,7 +155,7 @@ export default {
       bribe_unlocked: false,
       bribe_cost: new ethers.BigNumber.from("0"),
       vault_activation: 0,
-      roi_week: 0,
+      roi_year: 0,
     };
   },
   filters: {
@@ -295,9 +299,6 @@ export default {
         );
       }
     },
-    get_block_timestamp(timestamp) {
-      return axios.get(`https://api.bscscan.com/api?module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before&apikey=JXRIIVMTAN887F9D7NCTVQ7NMGNT1A4KA3`)      
-    },
     call(contract, method, args, out = "number") {
       let key = this.drizzleInstance.contracts[contract].methods[
         method
@@ -353,7 +354,7 @@ export default {
       }
     },
     vault_total_aum() {
-      let toFloat = new ethers.BigNumber.from(10).pow(this.vault_decimals.sub(2)).toString();
+      let toFloat = new ethers.BigNumber.from(10).pow(16).toString();
       let numAum = this.vault_total_assets.div(toFloat).toNumber();
       return (numAum / 100) * this.want_price;
     },
@@ -431,9 +432,8 @@ export default {
             .then((response) => {
               this.is_guest = response;
             });
-        }
 
-        this.contractGuestList.methods.total_yfi(this.activeAccount).call().then((response) => {
+          this.contractGuestList.methods.total_yfi(this.activeAccount).call().then((response) => {
             console.log("Total YFI: " + response.toString());
             this.total_yfi = new ethers.BigNumber.from(response.toString());
           });
@@ -449,7 +449,6 @@ export default {
                 );
               });
           });
-
         this.contractGuestList.methods
           .bribe_cost()
           .call()
@@ -457,33 +456,33 @@ export default {
             console.log("Bribe cost: " + response.toString());
             this.bribe_cost = new ethers.BigNumber.from(response.toString());
           });
+        }
       });
 
     // Get blocknumber and calc APY
     Vault.methods.pricePerShare().call().then( currentPrice => {
       const seconds_in_a_year = 31536000;
       const now = Math.round(Date.now() / 1000);
-
+      Vault.methods.activation().call().then(activationTime => {
       // 1 week ago
       const one_week_ago = (now - 60 * 60 * 24 * 7);
-      const ts_past = one_week_ago < this.config.BLOCK_ACTIVATED?this.config.BLOCK_ACTIVATED:one_week_ago;
+      const ts_past = one_week_ago < activationTime?activationTime:one_week_ago;
 
       const ts_diff = now - ts_past;
 
       console.log("TS Past: " + one_week_ago);
-      console.log("TS Activation: " + this.config.BLOCK_ACTIVATED);
-
-      this.get_block_timestamp(ts_past).then(response => {
-        console.log("Past block: " + response.data.result);
-        Vault.methods.pricePerShare().call({}, response.data.result).then( pastPrice => {
+      console.log("TS Activation: " + activationTime);
+          let pastPrice = 1e18;
+          console.log(`Pas price = ${pastPrice}`)
           let roi = (currentPrice / pastPrice - 1) * 100;
           console.log("Current Price: " + currentPrice);
           console.log("Past Price: " + pastPrice);
-          this.roi_week = roi/ts_diff*seconds_in_a_year;
-          console.log("ROI week: " + roi);
-          console.log("ROI year: " + this.roi_week);
-        });
-      });
+          this.roi = roi
+          this.roi_year = roi/ts_diff*seconds_in_a_year;
+          console.log("ROI year: " + roi);
+          console.log("ROI week: " + this.roi_year);
+      })
+
     });
 
     // Iterate through strats
