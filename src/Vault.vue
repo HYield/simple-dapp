@@ -374,7 +374,7 @@ export default {
       return this.activeBalance;
     },
     progress_limit() {
-      return (this.vault_deposit_limit.isZero()?0:(this.vault_deposit_limit - this.vault_available_limit) / this.vault_deposit_limit);
+      return (this.vault_deposit_limit.isZero() ? 0: (this.vault_deposit_limit - this.vault_available_limit) / this.vault_deposit_limit *100);
     },
     yfi_needed() {
       return this.entrance_cost.sub(this.total_yfi);
