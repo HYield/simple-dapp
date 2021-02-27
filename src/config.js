@@ -16,6 +16,20 @@ export default Object.freeze({
         BLOCK_ACTIVATED: 1606599919,
         VAULT_STATUS: "active",
     },
+    'TACOBNBCompound' : {
+        TITLE: "TACOBNBCompound",
+        LOGO: "🌮💰",
+        VAULT_ABI: yVaultV2,
+        VAULT_TYPE: 'yearn',
+        VAULT_ADDR: "0x825fa148Fc45e6A79441746d4dD5379272EEdb8c",
+        WANT_ADDR: "0x5590d45592C846DD820D360dd5Ba6b2610cDeeFB",
+        WANT_SYMBOL: "PLP",
+        COINGECKO_SYMBOL: "",
+        VAULT_DEV : "akshaynexust",
+        BLOCK_ACTIVATED: 1606599919,
+        VAULT_STATUS: "active",
+    },
+    /*
     'ICreamStaker' : {
         TITLE: "ICreamStaker",
         LOGO: "🍦💰",
@@ -28,7 +42,7 @@ export default Object.freeze({
         VAULT_DEV : "akshaynexust",
         BLOCK_ACTIVATED: 1606599919,
         VAULT_STATUS: "withdraw",
-    },
+    },*/
     'SmokeStaker' : {
         TITLE: "SmokeStaker",
         LOGO: "🥚💰",
@@ -42,6 +56,7 @@ export default Object.freeze({
         BLOCK_ACTIVATED: 1606599919,
         VAULT_STATUS: "active",
     },
+    /*
     'EggStaker' : {
         TITLE: "EggStaker",
         LOGO: "🥚💰",
@@ -67,7 +82,7 @@ export default Object.freeze({
         VAULT_DEV : "akshaynexust",
         BLOCK_ACTIVATED: 1606599919,
         VAULT_STATUS: "active",
-    },
+    },*/
     /*
     'ICreamBNBLPFarm' : {
         TITLE: "ICreamBNBLPFarm",
@@ -81,7 +96,7 @@ export default Object.freeze({
         VAULT_DEV : "akshaynexust",
         BLOCK_ACTIVATED: 1606599919,
         VAULT_STATUS: "withdraw",
-    },*/
+    },
     'SOAKBNBLPFarm' : {
         TITLE: "SOAKBNBLPFarm",
         LOGO: "🍦💰",
@@ -107,5 +122,5 @@ export default Object.freeze({
         VAULT_DEV : "akshaynexust",
         BLOCK_ACTIVATED: 1606599919,
         VAULT_STATUS: "active",
-    }
+    }*/
 })
