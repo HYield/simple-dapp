@@ -18,6 +18,21 @@ export default Object.freeze({
     VAULT_STATUS: "withdraw",
     CHAIN_ID: 1,
   },
+  oriStaker: {
+    // route path
+    TITLE: "Ori staker",
+    LOGO: "🏆🚀",
+    VAULT_ABI: yVaultV2,
+    VAULT_TYPE: "yearn",
+    VAULT_ADDR: "0x0AFa09D87be7711B5C64A5b577F71AC9502764E0",
+    WANT_ADDR: "0x0575f8738EFdA7F512e3654F277C77e80C7d2725",
+    WANT_SYMBOL: "ORI",
+    COINGECKO_SYMBOL: "",
+    VAULT_DEV: "akshaynexus",
+    BLOCK_ACTIVATED: 1606599919,
+    VAULT_STATUS: "active",
+    CHAIN_ID: 250,
+  },
   devhugger: {
     TITLE: "DEV Hugger",
     LOGO: "👾🤗",

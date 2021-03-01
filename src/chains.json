@@ -4,6 +4,11 @@
     "coin": "ETH",
     "block_explorer": "https://etherscan.io"
   },
+  "56": {
+    "name": "BSC Mainnet",
+    "coin": "BSC",
+    "block_explorer": "https://bscscan.com"
+  },
   "250": {
     "name": "FTM Mainnet",
     "coin": "FTM",
