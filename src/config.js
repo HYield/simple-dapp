@@ -37,7 +37,7 @@ export default Object.freeze({
         VAULT_ADDR: "0x78bef219b3348CD65387F6f7B27c9ee3Bf525704",
         WANT_ADDR: "0xf16e81dce15b08f326220742020379b855b87df9",
         WANT_SYMBOL: "ICE",
-        COINGECKO_SYMBOL: "",
+        COINGECKO_SYMBOL: "ice-token",
         VAULT_DEV : "poolpitako",
         BLOCK_ACTIVATED: 1606599919,
         VAULT_STATUS: "active",
