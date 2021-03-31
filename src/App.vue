@@ -12,8 +12,6 @@ v-app
 <script>
 import config from './config.js'
 import Vault from './Vault'
-import LidoVault from './LidoVault'
-import stETHLPVault from './stETHLPVault'
 import Home from './Home'
 import NotFound from './NotFound'
 import { mapGetters } from 'vuex'
@@ -24,12 +22,6 @@ const vaultConfig = config[vaultPath] || null;
 let VaultType;
 
 switch (window.location.pathname) {
-  case '/yvsteth':
-    VaultType = LidoVault;
-    break;
-  case '/stecrv':
-    VaultType = stETHLPVault;
-    break;
   default:
     VaultType = Object.prototype.hasOwnProperty.call(config, vaultPath) ? Vault : NotFound;
 }

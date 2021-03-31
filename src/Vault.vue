@@ -38,19 +38,18 @@
         v-card
           v-card-title Wallet
           v-card-text
-            div Your Account: {{ username || activeAccount }}
-            div Your Vault shares: {{ yvtoken_balance | fromWei(2, vault_decimals) }}
-            div Your {{ config.WANT_SYMBOL }} Balance: {{ want_balance | fromWei(2, vault_decimals) }}
-            div Your ETH Balance: {{ eth_balance | fromWei(2) }}
+            div Deposited value: {{ vault_net_deposited }} {{ config.WANT_SYMBOL }}
+            div Vault shares: {{ yvtoken_balance | fromWei(2, vault_decimals) }}
+            div {{ config.WANT_SYMBOL }} Balance: {{ want_balance | fromWei(2, vault_decimals) }}
+            div BNB Balance: {{ eth_balance | fromWei(2) }}
         div.spacer
 
         div(v-if="is_guest || yfi_needed <= 0")
                 //- span You are a guest. Welcome to the Citadel 🏰
                 v-card
-                  v-card-title Manange
+                  v-card-title Manage
                   v-card-text
-                    div.spacer
-                        v-text-field(v-model.number="amount", size="is-small", type="number",min=0,label="Deposit Amount")
+                    v-text-field(v-if="vault_available_limit > 0",v-model.number="amount", size="is-small", type="number",min=0,label="Deposit Amount")
                     span(v-if="vault_available_limit <= 0") Deposits closed.
                     v-card-actions
                       v-btn(
@@ -108,7 +107,7 @@ div(v-else)
 <script>
 
 import { mapGetters } from "vuex";
-import ethers from "ethers";
+import { ethers } from "ethers";
 import axios from "axios";
 import ProgressBar from './components/ProgressBar';
 import InfoMessage from './components/InfoMessage';
@@ -121,8 +120,8 @@ import Web3 from "web3";
 
 let web3 = new Web3(Web3.givenProvider);
 
-const max_uint = new ethers.BigNumber.from(2).pow(256).sub(1).toString();
-const BN_ZERO = new ethers.BigNumber.from(0);
+const max_uint =  ethers.BigNumber.from(2).pow(256).sub(1).toString();
+const BN_ZERO =  ethers.BigNumber.from(0);
 const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
 
 const ERROR_NEGATIVE = "You have to deposit a positive number of tokens 🐀";
@@ -150,10 +149,10 @@ export default {
       error: null,
       contractGuestList: null,
       is_guest: false,
-      entrance_cost: new ethers.BigNumber.from("1"),
-      total_yfi: new ethers.BigNumber.from("0"),
+      entrance_cost: ethers.BigNumber.from("1"),
+      total_yfi: ethers.BigNumber.from("0"),
       bribe_unlocked: false,
-      bribe_cost: new ethers.BigNumber.from("0"),
+      bribe_cost: ethers.BigNumber.from("0"),
       vault_activation: 0,
       roi_year: 0,
     };
@@ -169,6 +168,13 @@ export default {
       if (precision === 0) return parts[0];
 
       return parts[0] + "." + parts[1].slice(0, precision);
+    },
+    fromWeiToFloat(data, decimals) {
+      if (decimals === undefined) decimals = 18;
+      if (data === "loading") return data;
+      if (data > 2 ** 255) return "♾️";
+      let value = ethers.utils.formatUnits(data, decimals)
+      return parseFloat(value)
     },
     fromWei15(data, precision) {
       if (data === "loading") return data;
@@ -312,7 +318,7 @@ export default {
       switch (out) {
         case "number":
           if (value === null) value = 0;
-          return new ethers.BigNumber.from(value);
+          return ethers.BigNumber.from(value);
         case "address":
           return value;
         default:
@@ -354,12 +360,17 @@ export default {
       }
     },
     vault_total_aum() {
-      let toFloat = new ethers.BigNumber.from(10).pow(16).toString();
+      let toFloat = ethers.BigNumber.from(10).pow(16).toString();
       let numAum = this.vault_total_assets.div(toFloat).toNumber();
       return (numAum / 100) * this.want_price;
     },
     vault_price_per_share() {
       return this.call("Vault", "pricePerShare", []);
+    },
+    vault_net_deposited() {
+      let currVaultShares = this.$options.filters.fromWeiToFloat(this.yvtoken_balance)
+      let curPricePerShare = this.$options.filters.fromWeiToFloat(this.vault_price_per_share)
+      return  (currVaultShares * curPricePerShare).toLocaleString()
     },
     vault_decimals() {
       return this.call("Vault", "decimals", []);
@@ -444,7 +455,7 @@ export default {
 
           this.contractGuestList.methods.total_yfi(this.activeAccount).call().then((response) => {
             console.log("Total YFI: " + response.toString());
-            this.total_yfi = new ethers.BigNumber.from(response.toString());
+            this.total_yfi = ethers.BigNumber.from(response.toString());
           });
 
         Vault.methods.activation().call().then((vault_activation) => {
@@ -453,7 +464,7 @@ export default {
               .call()
               .then((response) => {
                 console.log("Entrance cost: " + response.toString());
-                this.entrance_cost = new ethers.BigNumber.from(
+                this.entrance_cost = ethers.BigNumber.from(
                   response.toString()
                 );
               });
@@ -463,7 +474,7 @@ export default {
           .call()
           .then((response) => {
             console.log("Bribe cost: " + response.toString());
-            this.bribe_cost = new ethers.BigNumber.from(response.toString());
+            this.bribe_cost = ethers.BigNumber.from(response.toString());
           });
         }
       });
@@ -488,13 +499,41 @@ export default {
           console.log("Past Price: " + pastPrice);
           this.roi = roi
           this.roi_year = roi/ts_diff*seconds_in_a_year;
-          console.log("ROI year: " + roi);
-          console.log("ROI week: " + this.roi_year);
+          console.log("ROI week: " + roi);
+          console.log("ROI year: " + this.roi_year);
       })
 
     });
-
     // Iterate through strats
   },
 };
 </script>
+<style>
+button {
+  margin-right: 1em;
+}
+.muted {
+  color: gray;
+  font-size: 0.8em;
+}
+.muted a {
+  text-decoration: underline;
+}
+.red {
+  color: red;
+  font-weight: 700;
+}
+.blue {
+  color: blue;
+  font-weight: 700;
+}
+.spacer {
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+a,
+a:visited,
+a:hover {
+  color: gray;
+}
+</style>
