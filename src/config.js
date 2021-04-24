@@ -69,19 +69,19 @@ export default Object.freeze({
         BLOCK_ACTIVATED: 1606599919,
         VAULT_STATUS: "withdraw",
     },*/
-    // 'SmokeStaker' : {
-    //     TITLE: "SmokeStaker",
-    //     LOGO: "🥚💰",
-    //     VAULT_ABI: yVaultV2,
-    //     VAULT_TYPE: 'yearn',
-    //     VAULT_ADDR: "0x005Ad6Db36161526100711fE2F359e9Ed9893aae",
-    //     WANT_ADDR: "0x5239fE1A8c0b6ece6AD6009D15315e02B1E7c4Ea",
-    //     WANT_SYMBOL: "SMOKE",
-    //     COINGECKO_SYMBOL: "",
-    //     VAULT_DEV : "akshaynexust",
-    //     BLOCK_ACTIVATED: 1606599919,
-    //     VAULT_STATUS: "active",
-    // },
+    'SmokeStaker' : {
+        TITLE: "SmokeStaker",
+        LOGO: "🥚💰",
+        VAULT_ABI: yVaultV2,
+        VAULT_TYPE: 'yearn',
+        VAULT_ADDR: "0x005Ad6Db36161526100711fE2F359e9Ed9893aae",
+        WANT_ADDR: "0x5239fE1A8c0b6ece6AD6009D15315e02B1E7c4Ea",
+        WANT_SYMBOL: "SMOKE",
+        COINGECKO_SYMBOL: "",
+        VAULT_DEV : "akshaynexust",
+        BLOCK_ACTIVATED: 1606599919,
+        VAULT_STATUS: "withdraw",
+    },
     /*
     'EggStaker' : {
         TITLE: "EggStaker",
