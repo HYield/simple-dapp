@@ -25,7 +25,7 @@
             div Available limit: {{ vault_available_limit | fromWei(2, vault_decimals) }} {{ config.WANT_SYMBOL }}
             v-progress-linear(:value="progress_limit" height="20px") {{ Math.round(progress_limit) }}%
             v-card-actions
-              v-btn <a :href="'https://bscscan.com/address/' + config.VAULT_ADDR + '#code'" target="_blank"> 📃Contract </a>
+              v-btn <a :href="chainExplorer + '/address/' + config.VAULT_ADDR + '#code'" target="_blank"> 📃Contract </a>
         div.spacer
         v-card
           v-card-title Strategies
@@ -33,7 +33,7 @@
             div(v-for="(strategy, index) in strategies")
                 div Strat. {{ index }}: {{ strategy.name }}
                     v-card-actions
-                        v-btn <a :href="'https://bscscan.com/address/' + strategy.address + '#code'" target="_blank"> 📃Contract </a>
+                        v-btn <a :href="chainExplorer + '/address/' + strategy.address + '#code'" target="_blank"> 📃Contract </a>
         div.spacer
         v-card
           v-card-title Wallet
@@ -41,7 +41,7 @@
             div Deposited value: {{ vault_net_deposited }} {{ config.WANT_SYMBOL }}
             div Vault shares: {{ yvtoken_balance | fromWei(2, vault_decimals) }}
             div {{ config.WANT_SYMBOL }} Balance: {{ want_balance | fromWei(2, vault_decimals) }}
-            div BNB Balance: {{ eth_balance | fromWei(2) }}
+            div Your {{ chainCoin }} Balance: {{ coin_balance | fromWei(2) }}
         div.spacer
 
         div(v-if="is_guest || yfi_needed <= 0")
@@ -136,7 +136,7 @@ export default {
   components: {
     ProgressBar,
   },
-  props: ['config', 'chainId'],
+  props: ['config', 'chainId', 'chainCoin', 'chainExplorer'],
   data() {
     return {
       username: null,
@@ -381,7 +381,7 @@ export default {
     want_balance() {
       return this.call("WANT", "balanceOf", [this.activeAccount]);
     },
-    eth_balance() {
+    coin_balance() {
       return this.activeBalance;
     },
     progress_limit() {

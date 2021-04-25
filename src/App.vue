@@ -4,7 +4,7 @@ v-app
   v-main
     v-container(fluid)
       div(v-if="isDrizzleInitialized && chainId", id="app")
-        Section(:config="config" :allConfig="allConfig" :chainId="chainId")
+        Section(:config="config" :allConfig="allConfig" :chainId="chainId" :chainCoin="chainCoin")
       div(v-else , id="app")
         v-progress-linear(indeterminate color="primary")
 </template>
@@ -64,6 +64,11 @@ export default {
     chainName() {
       if (this.chainId) {
         return chains[this.chainId].name;
+      }
+    },
+    chainCoin() {
+      if (this.chainId) {
+        return chains[this.chainId].coin;
       }
     }
   }
