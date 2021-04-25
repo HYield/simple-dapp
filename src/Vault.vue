@@ -136,7 +136,7 @@ export default {
   components: {
     ProgressBar,
   },
-  props: ['config'],
+  props: ['config', 'chainId'],
   data() {
     return {
       username: null,
@@ -419,6 +419,9 @@ export default {
     },
   },
   async created() {
+    if (this.chainId && this.config.CHAIN_ID !== this.chainId) {
+      window.location.href = '/'
+    }
     axios
       .get(
         "https://api.coingecko.com/api/v3/simple/price?ids=" +
