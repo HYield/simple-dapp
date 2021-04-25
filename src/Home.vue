@@ -1,6 +1,6 @@
 <template lang="pug">
 v-app
-  v-app-bar(app) Test Vaults Registry
+  v-app-bar(app) Vaults registry
   v-main
     v-container(fluid)
       v-card(class="mx-auto"
