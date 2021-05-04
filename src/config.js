@@ -33,6 +33,21 @@ export default Object.freeze({
     VAULT_STATUS: "active",
     CHAIN_ID: 250,
   },
+  auroraCompounder: {
+    // route path
+    TITLE: "Aururoa LP Comp",
+    LOGO: "🏆🚀",
+    VAULT_ABI: yVaultV2,
+    VAULT_TYPE: "yearn",
+    VAULT_ADDR: "0x870F9b977F903f6B562bdfa2430B615B379b074e",
+    WANT_ADDR: "0x483D07BC99CdD1DF66F64aE0A769A70725C46fA4",
+    WANT_SYMBOL: "AURORA-FTM LP",
+    COINGECKO_SYMBOL: "",
+    VAULT_DEV: "akshaynexus",
+    BLOCK_ACTIVATED: 1606599919,
+    VAULT_STATUS: "active",
+    CHAIN_ID: 250,
+  },
   devhugger: {
     TITLE: "DEV Hugger",
     LOGO: "👾🤗",
