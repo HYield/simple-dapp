@@ -18,6 +18,36 @@ export default Object.freeze({
     VAULT_STATUS: "withdraw",
     CHAIN_ID: 1,
   },
+  maltdailp: {
+    // route path
+    TITLE: "Malt Daier",
+    LOGO: "🏆",
+    VAULT_ABI: yVaultV2,
+    VAULT_TYPE: "yearn",
+    VAULT_ADDR: "0x082C2c0f0D8F9184f240d5935EAE9b06ceA7a644",
+    WANT_ADDR: "0x3b7e9ea4bf300525ccbbc81c792b2bce7a13a2d6",
+    WANT_SYMBOL: "MALT-DAI LP",
+    COINGECKO_SYMBOL: "",
+    VAULT_DEV: "akshaynexus",
+    BLOCK_ACTIVATED: 1606599919,
+    VAULT_STATUS: "active",
+    CHAIN_ID: 137,
+  },
+  // busdFortress: {
+  //   // route path
+  //   TITLE: "BUSD Fortress",
+  //   LOGO: "🏆",
+  //   VAULT_ABI: yVaultV2,
+  //   VAULT_TYPE: "yearn",
+  //   VAULT_ADDR: "0x0980FDfCEC071ea070a991fBdD1900280cD66c11",
+  //   WANT_ADDR: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+  //   WANT_SYMBOL: "BUSD",
+  //   COINGECKO_SYMBOL: "binance-usd",
+  //   VAULT_DEV: "akshaynexus",
+  //   BLOCK_ACTIVATED: 1606599919,
+  //   VAULT_STATUS: "active",
+  //   CHAIN_ID: 0x38,
+  // },
   oriStaker: {
     // route path
     TITLE: "Ori staker",

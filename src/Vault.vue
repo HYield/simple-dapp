@@ -17,7 +17,7 @@
             div Total Assets: {{ vault_total_assets | fromWei(2, vault_decimals) }}        {{ config.WANT_SYMBOL }}
             div Total AUM: {{ vault_total_aum | toCurrency(2, vault_decimals) }}
             div.spacer
-            div Growth :  {{ roi.toFixed(3) }}%
+            //- div Growth :  {{ roi.toFixed(3) }}%
             div Estimated Daily APR :  {{ (get_yearly_apy / 365).toFixed(3) }}%
             //- div Weekly APY : {{ get_weekly_apy / 51}}%
             div Estimated Yearly APR : {{ get_yearly_apy }}%
@@ -439,49 +439,50 @@ export default {
     let Vault = new web3.eth.Contract(yVaultV2, this.vault);
     console.log(Vault);
     this.get_strategies(Vault);
+        this.is_guest = true;
 
     // Get GuestList contract and use it :)
-    Vault.methods.guestList().call().then((response) => {
-        if (response == ADDRESS_ZERO) {
-          //if there's not guest list, everyone is a guest ;)
-          console.log("No guest list. Everyone is invited!");
-          this.is_guest = true;
-          this.total_yfi = this.entrance_cost;
-        } else {
-          this.contractGuestList = new web3.eth.Contract(GuestList, response);
+    // Vault.methods.guestList().call().then((response) => {
+    //     console.log(response)
+    //     if (response == ADDRESS_ZERO) {
+    //       //if there's not guest list, everyone is a guest ;)
+    //       console.log("No guest list. Everyone is invited!");
+    //       this.total_yfi = this.entrance_cost;
+    //     } else {
+    //       this.contractGuestList = new web3.eth.Contract(GuestList, response);
 
-          this.contractGuestList.methods
-            .guests(this.activeAccount)
-            .call()
-            .then((response) => {
-              this.is_guest = response;
-            });
+    //       this.contractGuestList.methods
+    //         .guests(this.activeAccount)
+    //         .call()
+    //         .then((response) => {
+    //           this.is_guest = response;
+    //         });
 
-          this.contractGuestList.methods.total_yfi(this.activeAccount).call().then((response) => {
-            console.log("Total YFI: " + response.toString());
-            this.total_yfi = ethers.BigNumber.from(response.toString());
-          });
+    //       this.contractGuestList.methods.total_yfi(this.activeAccount).call().then((response) => {
+    //         console.log("Total YFI: " + response.toString());
+    //         this.total_yfi = ethers.BigNumber.from(response.toString());
+    //       });
 
-        Vault.methods.activation().call().then((vault_activation) => {
-            this.contractGuestList.methods
-              .entrance_cost(vault_activation)
-              .call()
-              .then((response) => {
-                console.log("Entrance cost: " + response.toString());
-                this.entrance_cost = ethers.BigNumber.from(
-                  response.toString()
-                );
-              });
-          });
-        this.contractGuestList.methods
-          .bribe_cost()
-          .call()
-          .then((response) => {
-            console.log("Bribe cost: " + response.toString());
-            this.bribe_cost = ethers.BigNumber.from(response.toString());
-          });
-        }
-      });
+    //     Vault.methods.activation().call().then((vault_activation) => {
+    //         this.contractGuestList.methods
+    //           .entrance_cost(vault_activation)
+    //           .call()
+    //           .then((response) => {
+    //             console.log("Entrance cost: " + response.toString());
+    //             this.entrance_cost = ethers.BigNumber.from(
+    //               response.toString()
+    //             );
+    //           });
+    //       });
+    //     this.contractGuestList.methods
+    //       .bribe_cost()
+    //       .call()
+    //       .then((response) => {
+    //         console.log("Bribe cost: " + response.toString());
+    //         this.bribe_cost = ethers.BigNumber.from(response.toString());
+    //       });
+    //     }
+    //   });
 
     // Get blocknumber and calc APY
     Vault.methods.pricePerShare().call().then( currentPrice => {
@@ -497,14 +498,20 @@ export default {
       console.log("TS Past: " + one_week_ago);
       console.log("TS Activation: " + activationTime);
           let pastPrice = 1e18;
-          console.log(`Pas price = ${pastPrice}`)
-          let roi = (currentPrice / pastPrice - 1) * 100;
-          console.log("Current Price: " + currentPrice);
-          console.log("Past Price: " + pastPrice);
-          this.roi = roi
-          this.roi_year = roi/ts_diff*seconds_in_a_year;
-          console.log("ROI week: " + roi);
-          console.log("ROI year: " + this.roi_year);
+          if(currentPrice > pastPrice) {
+            console.log(`Pas price = ${pastPrice}`)
+            let roi = (currentPrice / pastPrice - 1) * 100;
+            console.log("Current Price: " + currentPrice);
+            console.log("Past Price: " + pastPrice);
+            this.roi = roi
+            this.roi_year = roi/ts_diff*seconds_in_a_year;
+            console.log("ROI week: " + roi);
+            console.log("ROI year: " + this.roi_year);
+          }
+          else {
+            this.roi = 0;
+            this.roi_year = 0;
+          }
       })
 
     });

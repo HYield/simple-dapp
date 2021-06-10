@@ -5,9 +5,14 @@
     "block_explorer": "https://etherscan.io"
   },
   "56": {
-    "name": "BSC Mainnet",
-    "coin": "BSC",
+    "name": "Binance Smart Chain",
+    "coin": "BNB",
     "block_explorer": "https://bscscan.com"
+  },
+  "137": {
+    "name": "Polygon",
+    "coin": "MATIC",
+    "block_explorer": "https://polygonscan.com"
   },
   "250": {
     "name": "FTM Mainnet",
