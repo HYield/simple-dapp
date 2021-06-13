@@ -18,15 +18,15 @@ export default Object.freeze({
     VAULT_STATUS: "withdraw",
     CHAIN_ID: 1,
   },
-  maltdailp: {
+  titanironlp: {
     // route path
-    TITLE: "Malt Daier",
+    TITLE: "Titan IRON SLP",
     LOGO: "🏆",
     VAULT_ABI: yVaultV2,
     VAULT_TYPE: "yearn",
-    VAULT_ADDR: "0x082C2c0f0D8F9184f240d5935EAE9b06ceA7a644",
-    WANT_ADDR: "0x3b7e9ea4bf300525ccbbc81c792b2bce7a13a2d6",
-    WANT_SYMBOL: "MALT-DAI LP",
+    VAULT_ADDR: "0x607da5d25515e8a931f4e23f03dd62b8ad1f23a6",
+    WANT_ADDR: "0x35c1895dac1e2432b320e2927b4f71a0d995602f",
+    WANT_SYMBOL: "TITAN-IRON SLP",
     COINGECKO_SYMBOL: "",
     VAULT_DEV: "akshaynexus",
     BLOCK_ACTIVATED: 1606599919,
