@@ -35,7 +35,7 @@ export default Object.freeze({
   },
   matictitanslp: {
     // route path
-    TITLE: "Matic IRON SLP",
+    TITLE: "Matic TITAN SLP",
     LOGO: "🏆",
     VAULT_ABI: yVaultV2,
     VAULT_TYPE: "yearn",
@@ -70,7 +70,7 @@ export default Object.freeze({
     VAULT_ABI: yVaultV2,
     VAULT_TYPE: "yearn",
     VAULT_ADDR: "0x7E5D7C667Bb769435439d7B7dc9dA38cCd4163Cc",
-    WANT_ADDR: "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff",
+    WANT_ADDR: "0x2Bbe0F728f4d5821F84eeE0432D2A4be7C0cB7Fc",
     WANT_SYMBOL: "USDC-IRON QLP",
     COINGECKO_SYMBOL: "",
     VAULT_DEV: "akshaynexus",
