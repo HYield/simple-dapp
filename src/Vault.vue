@@ -50,25 +50,26 @@
                 v-card
                   v-card-title Manage
                   v-card-text
-                    v-text-field(v-if="vault_available_limit > 0",v-model.number="amount", size="is-small", type="number",min=0,label="Deposit Amount")
+                    v-text-field(v-if="vault_available_limit > 0",v-model.number="amount", size="is-small", type="number",min=0,:label="(actionSwitch ? `Deposit amount` : `Withdraw amount`)")
                     span(v-if="vault_available_limit <= 0") Deposits closed.
                     v-card-actions
+                      v-switch(v-model="actionSwitch",:label="`${actionSwitch ? `Deposit` : `Withdraw`}`")
                       v-btn(
                               v-if="vault_available_limit > 0 && !has_allowance_vault",
                               :disabled="has_allowance_vault",
                               @click.prevent="on_approve_vault"
                       ) {{ has_allowance_vault ? '✅ Approved' : '🚀 Approve Vault' }}
                       v-btn(
-                              v-if="vault_available_limit > 0",
+                              v-if="actionSwitch ? vault_available_limit > 0: has_allowance_vault ",
                               :disabled="!has_allowance_vault",
-                              @click.prevent="on_deposit"
-                      ) 🏦 Deposit
+                              @click.prevent="on_vault_action_click"
+                      ) {{(actionSwitch ? ` 🏦 Deposit` : ` 💸 Withdraw`)}}
                       v-btn(
-                              v-if="vault_available_limit > 0",
-                              :disabled="!has_allowance_vault",
-                              @click.prevent="on_deposit_all"
-                      ) 🏦 Deposit All
-                      v-btn(:disabled="!has_yvtoken_balance", @click.prevent="on_withdraw_all") 💸 Withdraw All
+                              v-if="actionSwitch ? vault_available_limit > 0 : has_allowance_vault",
+                              :disabled="actionSwitch ? !has_allowance_vault : !has_yvtoken_balance",
+                              @click.prevent="on_all_click"
+                      ) {{(actionSwitch ? `🏦 Deposit all` : `💸 Withdraw all`)}}
+                      //- v-btn(:disabled="!has_yvtoken_balance", @click.prevent="on_withdraw_all") 💸 Withdraw All
         div(v-else)
                 .red
                         span ⛔ You need {{ yfi_needed | fromWei(4) }} YFI more to enter the Citadel ⛔
@@ -126,6 +127,8 @@ const BN_ZERO =  ethers.BigNumber.from(0);
 const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
 
 const ERROR_NEGATIVE = "You have to deposit a positive number of tokens 🐀";
+const ERROR_NOT_ENOUGH_DEPOSIT= "You don't have enough tokens to deposit";
+const ERROR_NOT_ENOUGH_SHARES = "You don't have enough vault tokens to withdraw";
 const ERROR_NEGATIVE_ALL = "You don't have tokens to deposit 🐀";
 const ERROR_NEGATIVE_WITHDRAW = "You don't have any vault shares";
 const ERROR_GUEST_LIMIT = "That would exceed your guest limit. Try less.";
@@ -141,6 +144,7 @@ export default {
   data() {
     return {
       username: null,
+      actionSwitch:true,
       want_price: 0,
       amount: 0,
       amount_wrap: 0,
@@ -193,7 +197,6 @@ export default {
     },
     toCurrency(data, precision) {
       if ( !data ) return "-";
-      
       if (typeof data !== "number") {
         data = parseFloat(data);
       }
@@ -229,12 +232,35 @@ export default {
         return;
       }
 
+      else if(this.amount > this.want_balance){
+        this.error = ERROR_NOT_ENOUGH_DEPOSIT;
+        this.amount = 0;
+        return;
+      }
+
       this.drizzleInstance.contracts["Vault"].methods["deposit"].cacheSend(
         ethers.utils.parseUnits(this.amount.toString(), this.vault_decimals).toString(),
         {
           from: this.activeAccount,
         }
       );
+    },
+    on_vault_action_click() {
+      if(this.actionSwitch) {
+        this.on_deposit()
+      }
+      else {
+        this.on_withdraw()
+      }
+    },
+    on_all_click(){
+      if(this.actionSwitch) {
+        //Deposit all
+        this.on_deposit_all()
+      }
+      else {
+        this.on_withdraw_all();
+      }
     },
     on_deposit_all() {
       if (this.want_balance <= 0) {
@@ -255,6 +281,35 @@ export default {
         .then((response) => {
           console.log(response);
         });
+    },
+    getVaultSharesForAmount(amount) {
+      let curPricePerShare = this.$options.filters.fromWeiToFloat(this.vault_price_per_share)
+      return amount / curPricePerShare
+    },
+    on_withdraw() {
+      if (this.yvtoken_balance <= 0) {
+        this.error = ERROR_NEGATIVE_WITHDRAW;
+        this.amount = 0;
+        return;
+      }
+      if (this.amount <= 0) {
+        this.error = ERROR_NEGATIVE;
+        this.amount = 0;
+        return;
+      }
+      //
+      let withdrawSharesAmount = this.getVaultSharesForAmount(this.amount)
+      let currVaultShares = this.$options.filters.fromWeiToFloat(this.yvtoken_balance)
+
+      if(withdrawSharesAmount > currVaultShares) {
+        this.error = ERROR_NOT_ENOUGH_SHARES;
+        this.amount = 0;
+        return;
+      }
+      this.drizzleInstance.contracts["Vault"].methods["withdraw"].cacheSend(
+        ethers.utils.parseUnits(withdrawSharesAmount.toString(), this.vault_decimals).toString(),{
+        from: this.activeAccount,
+      });
     },
     on_withdraw_all() {
       if (this.yvtoken_balance <= 0) {
