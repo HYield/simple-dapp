@@ -18,5 +18,10 @@
     "name": "FTM Mainnet",
     "coin": "FTM",
     "block_explorer": "https://ftmscan.com"
+  },
+  "321": {
+    "name": "KCS Mainnet",
+    "coin": "KCS",
+    "block_explorer": "https://explorer.kcc.io/en"
   }
 }
