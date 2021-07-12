@@ -18,9 +18,9 @@
             div Total AUM: {{ vault_total_aum | toCurrency(2, vault_decimals) }}
             div.spacer
             //- div Growth :  {{ roi.toFixed(3) }}%
-            div Estimated Daily APR :  {{ (get_yearly_apy / 365).toFixed(3) }}%
+            div Estimated Daily APY :  {{ (get_yearly_apy / 365).toFixed(3) }}%
             //- div Weekly APY : {{ get_weekly_apy / 51}}%
-            div Estimated Yearly APR : {{ get_yearly_apy }}%
+            div Estimated Yearly APY : {{ get_yearly_apy }}%
             div.spacer
             div Price Per Share: {{ vault_price_per_share | fromWei(8, vault_decimals) }}
             div Available limit: {{ vault_available_limit | fromWei(2, vault_decimals) }} {{ config.WANT_SYMBOL }}
@@ -541,7 +541,7 @@ export default {
 
     // Get blocknumber and calc APY
     Vault.methods.pricePerShare().call().then( currentPrice => {
-      const seconds_in_a_year = 31536000;
+      const seconds_in_a_year = 3.154e+7;
       const now = Math.round(Date.now() / 1000);
       Vault.methods.activation().call().then(activationTime => {
       // 1 week ago
@@ -552,7 +552,8 @@ export default {
 
       console.log("TS Past: " + one_week_ago);
       console.log("TS Activation: " + activationTime);
-          let pastPrice = 1e18;
+          //TODO reference central api instead for apy
+          let pastPrice = this.config.WANT_SYMBOL == "KUS" ? 10 * 1e18: 1e18;
           if(currentPrice > pastPrice) {
             console.log(`Pas price = ${pastPrice}`)
             let roi = (currentPrice / pastPrice - 1) * 100;
