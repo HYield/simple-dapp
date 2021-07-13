@@ -81,7 +81,7 @@ export default Object.freeze({
   },
   kubeanskuswaplp: {
     // route path
-    TITLE: "KuBeans-WKCS Kuswap Compounder",
+    TITLE: "KuBeans-WKCS Kuswap",
     LOGO: "🏆",
     VAULT_ABI: yVaultV2,
     VAULT_TYPE: "yearn",
@@ -97,7 +97,7 @@ export default Object.freeze({
   },
   kubeanskoffeeswaplp: {
     // route path
-    TITLE: "KuBeans-WKCS Koffeeswap Compounder",
+    TITLE: "KuBeans-WKCS Koffeeswap",
     LOGO: "🏆",
     VAULT_ABI: yVaultV2,
     VAULT_TYPE: "yearn",
