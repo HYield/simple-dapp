@@ -79,6 +79,38 @@ export default Object.freeze({
     LP_VAULT:true,
     CHAIN_ID: 137,
   },
+  kubeanskuswaplp: {
+    // route path
+    TITLE: "KuBeans-WKCS Kuswap Compounder",
+    LOGO: "🏆",
+    VAULT_ABI: yVaultV2,
+    VAULT_TYPE: "yearn",
+    VAULT_ADDR: "0xb15E79B57EA3B7D1b34374c9CDEcF8a4389B8E92",
+    WANT_ADDR: "0x922a3fc7dAc0E6b3BA973a5c323Ff8D536359102",
+    WANT_SYMBOL: "KuBeans-WKCS KuLP",
+    COINGECKO_SYMBOL: "",
+    VAULT_DEV: "akshaynexus",
+    BLOCK_ACTIVATED: 1606599919,
+    VAULT_STATUS: "active",
+    LP_VAULT:true,
+    CHAIN_ID: 321,
+  },
+  kubeanskoffeeswaplp: {
+    // route path
+    TITLE: "KuBeans-WKCS Koffeeswap Compounder",
+    LOGO: "🏆",
+    VAULT_ABI: yVaultV2,
+    VAULT_TYPE: "yearn",
+    VAULT_ADDR: "0x160df063eB86513D3d913092d6c6013C3314EA85",
+    WANT_ADDR: "0x7a1ec7140832345E822d9B6bBfa8710FDE010993",
+    WANT_SYMBOL: "KuBeans-WKCS KuLP",
+    COINGECKO_SYMBOL: "",
+    VAULT_DEV: "akshaynexus",
+    BLOCK_ACTIVATED: 1606599919,
+    VAULT_STATUS: "active",
+    LP_VAULT:true,
+    CHAIN_ID: 321,
+  },
   kcskuslp: {
     // route path
     TITLE: "Kuswap LP Compounder",
