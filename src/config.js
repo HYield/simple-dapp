@@ -79,6 +79,7 @@ export default Object.freeze({
     LP_VAULT:true,
     CHAIN_ID: 137,
   },
+  /*
   kubeanskuswaplp: {
     // route path
     TITLE: "KuBeans-WKCS Kuswap",
@@ -126,7 +127,7 @@ export default Object.freeze({
     VAULT_STATUS: "active",
     LP_VAULT:true,
     CHAIN_ID: 321,
-  },
+  },*/
   kusStaker: {
     // route path
     TITLE: "Kuswap Staker",
@@ -141,6 +142,22 @@ export default Object.freeze({
     BLOCK_ACTIVATED: 1606599919,
     VAULT_STATUS: "active",
     LP_VAULT:false,
+    CHAIN_ID: 321,
+  },
+  usdtkcskuswap: {
+    // route path
+    TITLE: "USDT-WKCS Kuswap",
+    LOGO: "🏆",
+    VAULT_ABI: yVaultV2,
+    VAULT_TYPE: "yearn",
+    VAULT_ADDR: "0x5321bb6d8ecec291ba146df06da5d30ea650ba03",
+    WANT_ADDR: "0x6c31e0f5c07b81a87120cc58c4dcc3fbafb00367",
+    WANT_SYMBOL: "USDT-WKCS KuLP",
+    COINGECKO_SYMBOL: "",
+    VAULT_DEV: "akshaynexus",
+    BLOCK_ACTIVATED: 1606599919,
+    VAULT_STATUS: "active",
+    LP_VAULT:true,
     CHAIN_ID: 321,
   },
   // busdFortress: {
