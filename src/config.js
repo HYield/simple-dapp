@@ -160,6 +160,37 @@ export default Object.freeze({
     LP_VAULT: true,
     CHAIN_ID: 321,
   },
+  cheokex: {
+    TITLE: "CHE yVault",
+    LOGO: "",
+    VAULT_TYPE: "yearn",
+    VAULT_ABI: yVaultV2,
+    VAULT_ADDR: "0xe92f6C4333A5e1522a047B1a60d27B9F90321537",
+    WANT_ADDR: "0x8179D97Eb6488860d816e3EcAFE694a4153F216c",
+    WANT_SYMBOL: "CHE",
+    COINGECKO_SYMBOL: "",
+    VAULT_DEV: "akshaynexus",
+    BLOCK_ACTIVATED: 1606599919,
+    VAULT_STATUS: "active",
+    LP_VAULT: false,
+    CHAIN_ID: 66
+  },
+  usdtokex: {
+    TITLE: "USDT Vault",
+    LOGO: "",
+    VAULT_TYPE: "yearn",
+    VAULT_ABI: yVaultV2,
+    VAULT_ADDR: "0x0DE1363ca50663BA964b6E30ca13D799ed82e8C2",
+    WANT_ADDR: "0x382bB369d343125BfB2117af9c149795C6C65C50",
+    WANT_SYMBOL: "USDT",
+    COINGECKO_SYMBOL: "tether",
+    VAULT_DEV: "akshaynexus",
+    BLOCK_ACTIVATED: 1606599919,
+    VAULT_STATUS: "active",
+    LP_VAULT: false,
+    CHAIN_ID: 66
+  },
+  /*
   chewoktche: {
     TITLE: "CHE-WOKT CheLP yVault",
     LOGO: "",
@@ -325,6 +356,7 @@ export default Object.freeze({
     LP_VAULT: true,
     CHAIN_ID: 66,
   },
+  */
   // busdFortress: {
   //   // route path
   //   TITLE: "BUSD Fortress",
