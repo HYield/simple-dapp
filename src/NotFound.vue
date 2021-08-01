@@ -7,7 +7,6 @@
 </template>
 
 <script>
-
 import { mapGetters } from "vuex";
 
 export default {
@@ -15,22 +14,20 @@ export default {
   components: {},
   props: [],
   data() {
-    return {
-    };
+    return {};
   },
   filters: {},
   methods: {},
   computed: {},
-  created() {
-  },
-}
+  created() {},
+};
 </script>
 
 <style>
 div.notFound {
-	width: 400px;
-	height: 200px;
-	margin: auto;
+  width: 400px;
+  height: 200px;
+  margin: auto;
   text-align: center;
   font-size: 3em;
 }

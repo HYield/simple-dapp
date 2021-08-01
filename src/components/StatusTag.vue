@@ -9,45 +9,42 @@
 </template>
 
 <script>
-
 export default {
-	name: "StatusTag",
-	props: ['status'],
-	data() {
-		return {
-			tag_type: '',
-			tag_text: '',
-		}
-	},
+  name: "StatusTag",
+  props: ["status"],
+  data() {
+    return {
+      tag_type: "",
+      tag_text: "",
+    };
+  },
 
-	computed: {},
-	created() {
-		switch(this.status) {
-			case 'disabled':
-				this.tag_text = 'Disabled';
-				this.tag_type = 'is-warning';
-				break;
-			case 'withdraw':
-				this.tag_text = 'Withdraw';
-				this.tag_type = 'is-danger';
-				break;
-			case 'use_production':
-				this.tag_text = 'Use Production';
-				this.tag_type = 'is-info';
-				this.link = 'https://yearn.finance/vaults';
-				break;
-			default:
-				this.tag_type = '';
-				this.tag_text = '';
-			}
-	},
-
-}
-
+  computed: {},
+  created() {
+    switch (this.status) {
+      case "disabled":
+        this.tag_text = "Disabled";
+        this.tag_type = "is-warning";
+        break;
+      case "withdraw":
+        this.tag_text = "Withdraw";
+        this.tag_type = "is-danger";
+        break;
+      case "use_production":
+        this.tag_text = "Use Production";
+        this.tag_type = "is-info";
+        this.link = "https://yearn.finance/vaults";
+        break;
+      default:
+        this.tag_type = "";
+        this.tag_text = "";
+    }
+  },
+};
 </script>
 <style>
 .tag {
-	margin-left: 1em;
-	font-size: 0.6rem !important;
+  margin-left: 1em;
+  font-size: 0.6rem !important;
 }
 </style>

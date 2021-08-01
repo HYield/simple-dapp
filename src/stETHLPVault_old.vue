@@ -77,7 +77,6 @@ div(v-else)
 </template>
 
 <script>
-
 import { mapGetters } from "vuex";
 import ethers from "ethers";
 import axios from "axios";
@@ -103,7 +102,7 @@ const ERROR_GUEST_LIMIT_ALL =
 export default {
   name: "Vault",
   components: {},
-  props: ['config'],
+  props: ["config"],
   data() {
     return {
       username: null,
@@ -129,7 +128,9 @@ export default {
       if (decimals === undefined) decimals = 18;
       if (data === "loading") return data;
       if (data > 2 ** 255) return "♾️";
-      let value = ethers.utils.commify(ethers.utils.formatUnits(data, decimals));
+      let value = ethers.utils.commify(
+        ethers.utils.formatUnits(data, decimals)
+      );
       let parts = value.split(".");
 
       if (precision === 0) return parts[0];
@@ -151,8 +152,8 @@ export default {
       return `${(data * 100).toFixed(precision)}%`;
     },
     toCurrency(data, precision) {
-      if ( !data ) return "-";
-      
+      if (!data) return "-";
+
       if (typeof data !== "number") {
         data = parseFloat(data);
       }
@@ -188,13 +189,11 @@ export default {
         return;
       }
 
-      this.drizzleInstance.web3.eth.sendTransaction(
-        {
-          from: this.activeAccount,
-          to: this.vault,
-          value: ethers.utils.parseEther(this.amount.toString()).toString()
-        }
-      );
+      this.drizzleInstance.web3.eth.sendTransaction({
+        from: this.activeAccount,
+        to: this.vault,
+        value: ethers.utils.parseEther(this.amount.toString()).toString(),
+      });
     },
     on_deposit_steth() {
       this.error = null;
@@ -206,7 +205,9 @@ export default {
       }
 
       this.drizzleInstance.contracts["Vault"].methods["deposit"].cacheSend(
-        ethers.utils.parseUnits(this.amount_steth.toString(), this.vault_decimals).toString(),
+        ethers.utils
+          .parseUnits(this.amount_steth.toString(), this.vault_decimals)
+          .toString(),
         {
           from: this.activeAccount,
         }
@@ -240,7 +241,9 @@ export default {
       this.username = await resolver.methods.name(namehash).call();
     },
     get_block_timestamp(timestamp) {
-      return axios.get(`https://api.bscscan.com/api?module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before&apikey=JXRIIVMTAN887F9D7NCTVQ7NMGNT1A4KA3`)      
+      return axios.get(
+        `https://api.bscscan.com/api?module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before&apikey=JXRIIVMTAN887F9D7NCTVQ7NMGNT1A4KA3`
+      );
     },
     call(contract, method, args, out = "number") {
       let key = this.drizzleInstance.contracts[contract].methods[
@@ -284,7 +287,9 @@ export default {
       return this.call("Vault", "totalSupply", []);
     },
     vault_total_aum() {
-      let toFloat = new ethers.BigNumber.from(10).pow(this.vault_decimals.sub(2)).toString();
+      let toFloat = new ethers.BigNumber.from(10)
+        .pow(this.vault_decimals.sub(2))
+        .toString();
       let numAum = this.vault_total_assets.div(toFloat).toNumber();
       return (numAum / 100) * this.want_price;
     },
@@ -330,7 +335,8 @@ export default {
           "&vs_currencies=usd"
       )
       .then((response) => {
-        this.want_price = response.data[this.config.COINGECKO_SYMBOL.toLowerCase()].usd;
+        this.want_price =
+          response.data[this.config.COINGECKO_SYMBOL.toLowerCase()].usd;
       });
 
     //Active account is defined?
@@ -339,31 +345,40 @@ export default {
     let Vault = new web3.eth.Contract(stETHLPVault, this.vault);
 
     // Get blocknumber and calc APY
-    Vault.methods.pricePerShare().call().then( currentPrice => {
-      const seconds_in_a_year = 31536000;
-      const now = Math.round(Date.now() / 1000);
+    Vault.methods
+      .pricePerShare()
+      .call()
+      .then((currentPrice) => {
+        const seconds_in_a_year = 31536000;
+        const now = Math.round(Date.now() / 1000);
 
-      // 1 week ago
-      const one_week_ago = (now - 60 * 60 * 24 * 7);
-      const ts_past = one_week_ago < this.config.BLOCK_ACTIVATED?this.config.BLOCK_ACTIVATED:one_week_ago;
+        // 1 week ago
+        const one_week_ago = now - 60 * 60 * 24 * 7;
+        const ts_past =
+          one_week_ago < this.config.BLOCK_ACTIVATED
+            ? this.config.BLOCK_ACTIVATED
+            : one_week_ago;
 
-      const ts_diff = now - ts_past;
+        const ts_diff = now - ts_past;
 
-      console.log("TS Past: " + one_week_ago);
-      console.log("TS Activation: " + this.config.BLOCK_ACTIVATED);
+        console.log("TS Past: " + one_week_ago);
+        console.log("TS Activation: " + this.config.BLOCK_ACTIVATED);
 
-      this.get_block_timestamp(ts_past).then(response => {
-        console.log("Past block: " + response.data.result);
-        Vault.methods.pricePerShare().call({}, response.data.result).then( pastPrice => {
-          let roi = (currentPrice / pastPrice - 1) * 100;
-          console.log("Current Price: " + currentPrice);
-          console.log("Past Price: " + pastPrice);
-          this.roi_week = roi/ts_diff*seconds_in_a_year;
-          console.log("ROI week: " + roi);
-          console.log("ROI year: " + this.roi_week);
+        this.get_block_timestamp(ts_past).then((response) => {
+          console.log("Past block: " + response.data.result);
+          Vault.methods
+            .pricePerShare()
+            .call({}, response.data.result)
+            .then((pastPrice) => {
+              let roi = (currentPrice / pastPrice - 1) * 100;
+              console.log("Current Price: " + currentPrice);
+              console.log("Past Price: " + pastPrice);
+              this.roi_week = (roi / ts_diff) * seconds_in_a_year;
+              console.log("ROI week: " + roi);
+              console.log("ROI year: " + this.roi_week);
+            });
         });
       });
-    });
 
     // Iterate through strats
   },

@@ -107,12 +107,11 @@ div(v-else)
 </template>
 
 <script>
-
 import { mapGetters } from "vuex";
 import { ethers } from "ethers";
 import axios from "axios";
-import ProgressBar from './components/ProgressBar';
-import InfoMessage from './components/InfoMessage';
+import ProgressBar from "./components/ProgressBar";
+import InfoMessage from "./components/InfoMessage";
 import GuestList from "./abi/GuestList.json";
 import yVaultV2 from "./abi/yVaultV2.json";
 import yStrategy from "./abi/yStrategy.json";
@@ -122,13 +121,14 @@ import Web3 from "web3";
 
 let web3 = new Web3(Web3.givenProvider);
 
-const max_uint =  ethers.BigNumber.from(2).pow(256).sub(1).toString();
-const BN_ZERO =  ethers.BigNumber.from(0);
+const max_uint = ethers.BigNumber.from(2).pow(256).sub(1).toString();
+const BN_ZERO = ethers.BigNumber.from(0);
 const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
 
 const ERROR_NEGATIVE = "You have to deposit a positive number of tokens 🐀";
-const ERROR_NOT_ENOUGH_DEPOSIT= "You don't have enough tokens to deposit";
-const ERROR_NOT_ENOUGH_SHARES = "You don't have enough vault tokens to withdraw";
+const ERROR_NOT_ENOUGH_DEPOSIT = "You don't have enough tokens to deposit";
+const ERROR_NOT_ENOUGH_SHARES =
+  "You don't have enough vault tokens to withdraw";
 const ERROR_NEGATIVE_ALL = "You don't have tokens to deposit 🐀";
 const ERROR_NEGATIVE_WITHDRAW = "You don't have any vault shares";
 const ERROR_GUEST_LIMIT = "That would exceed your guest limit. Try less.";
@@ -140,11 +140,11 @@ export default {
   components: {
     ProgressBar,
   },
-  props: ['config', 'chainId', 'chainCoin', 'chainExplorer'],
+  props: ["config", "chainId", "chainCoin", "chainExplorer"],
   data() {
     return {
       username: null,
-      actionSwitch:true,
+      actionSwitch: true,
       want_price: 0,
       amount: 0,
       amount_wrap: 0,
@@ -167,7 +167,9 @@ export default {
       if (decimals === undefined) decimals = 18;
       if (data === "loading") return data;
       if (data > 2 ** 255) return "♾️";
-      let value = ethers.utils.commify(ethers.utils.formatUnits(data, decimals));
+      let value = ethers.utils.commify(
+        ethers.utils.formatUnits(data, decimals)
+      );
       let parts = value.split(".");
 
       if (precision === 0) return parts[0];
@@ -178,8 +180,8 @@ export default {
       if (decimals === undefined) decimals = 18;
       if (data === "loading") return data;
       if (data > 2 ** 255) return "♾️";
-      let value = ethers.utils.formatUnits(data, decimals)
-      return parseFloat(value)
+      let value = ethers.utils.formatUnits(data, decimals);
+      return parseFloat(value);
     },
     fromWei15(data, precision) {
       if (data === "loading") return data;
@@ -196,7 +198,7 @@ export default {
       return `${(data * 100).toFixed(precision)}%`;
     },
     toCurrency(data, precision) {
-      if ( !data ) return "-";
+      if (!data) return "-";
       if (typeof data !== "number") {
         data = parseFloat(data);
       }
@@ -230,35 +232,33 @@ export default {
         this.error = ERROR_NEGATIVE;
         this.amount = 0;
         return;
-      }
-
-      else if(this.amount > this.want_balance){
+      } else if (this.amount > this.want_balance) {
         this.error = ERROR_NOT_ENOUGH_DEPOSIT;
         this.amount = 0;
         return;
       }
 
       this.drizzleInstance.contracts["Vault"].methods["deposit"].cacheSend(
-        ethers.utils.parseUnits(this.amount.toString(), this.vault_decimals).toString(),
+        ethers.utils
+          .parseUnits(this.amount.toString(), this.vault_decimals)
+          .toString(),
         {
           from: this.activeAccount,
         }
       );
     },
     on_vault_action_click() {
-      if(this.actionSwitch) {
-        this.on_deposit()
-      }
-      else {
-        this.on_withdraw()
+      if (this.actionSwitch) {
+        this.on_deposit();
+      } else {
+        this.on_withdraw();
       }
     },
-    on_all_click(){
-      if(this.actionSwitch) {
+    on_all_click() {
+      if (this.actionSwitch) {
         //Deposit all
-        this.on_deposit_all()
-      }
-      else {
+        this.on_deposit_all();
+      } else {
         this.on_withdraw_all();
       }
     },
@@ -274,17 +274,16 @@ export default {
       });
     },
     on_bribe_the_bouncer() {
-      console.log(this.contractGuestList.methods);
       this.contractGuestList.methods
         .bribe_the_bouncer()
         .send({ from: this.activeAccount })
-        .then((response) => {
-          console.log(response);
-        });
+        .then((response) => {});
     },
     getVaultSharesForAmount(amount) {
-      let curPricePerShare = this.$options.filters.fromWeiToFloat(this.vault_price_per_share)
-      return amount / curPricePerShare
+      let curPricePerShare = this.$options.filters.fromWeiToFloat(
+        this.vault_price_per_share
+      );
+      return amount / curPricePerShare;
     },
     on_withdraw() {
       if (this.yvtoken_balance <= 0) {
@@ -298,18 +297,24 @@ export default {
         return;
       }
       //
-      let withdrawSharesAmount = this.getVaultSharesForAmount(this.amount)
-      let currVaultShares = this.$options.filters.fromWeiToFloat(this.yvtoken_balance)
+      let withdrawSharesAmount = this.getVaultSharesForAmount(this.amount);
+      let currVaultShares = this.$options.filters.fromWeiToFloat(
+        this.yvtoken_balance
+      );
 
-      if(withdrawSharesAmount > currVaultShares) {
+      if (withdrawSharesAmount > currVaultShares) {
         this.error = ERROR_NOT_ENOUGH_SHARES;
         this.amount = 0;
         return;
       }
       this.drizzleInstance.contracts["Vault"].methods["withdraw"].cacheSend(
-        ethers.utils.parseUnits(withdrawSharesAmount.toString(), this.vault_decimals).toString(),{
-        from: this.activeAccount,
-      });
+        ethers.utils
+          .parseUnits(withdrawSharesAmount.toString(), this.vault_decimals)
+          .toString(),
+        {
+          from: this.activeAccount,
+        }
+      );
     },
     on_withdraw_all() {
       if (this.yvtoken_balance <= 0) {
@@ -328,6 +333,7 @@ export default {
       this.username = await resolver.methods.name(namehash).call();
     },
     async get_strategies(vault) {
+      // this.vault_underlying_lpFunds();
       for (let i = 0, p = Promise.resolve(); i < 20; i++) {
         p = p.then(
           (_) =>
@@ -350,7 +356,6 @@ export default {
                       .name()
                       .call()
                       .then((name) => {
-                        console.log(name);
                         this.$set(this.strategies[i], "name", name);
                       });
                   }
@@ -361,6 +366,48 @@ export default {
         );
       }
     },
+    getLPShare() {
+      let tSupply = this.lpSupply;
+      let vSupply = this.vault_total_assets;
+      let totalSupply = parseFloat(ethers.utils.formatEther(tSupply));
+      let currentBaseAsset = parseFloat(ethers.utils.formatEther(vSupply));
+      return (currentBaseAsset / totalSupply) * 100;
+    },
+    vault_underlying_lpFunds() {
+      if (this.config.LP_VAULT) {
+        let token0Addr = this.token0;
+        let token1addr = this.token1;
+        this.token0_0 = new web3.eth.Contract(ERC20, token0Addr);
+        this.token1_0 = new web3.eth.Contract(ERC20, token1addr);
+        let symbols = [];
+        this.reserveData = this.reserves;
+        //Get symbols
+        this.token0_0.methods
+          .symbol()
+          .call()
+          .then((symbol) => {
+            symbols.push(symbol);
+          });
+        this.token1_0.methods
+          .symbol()
+          .call()
+          .then((symbol) => {
+            symbols.push(symbol);
+          });
+        let supplyShare = this.getLPShare();
+        console.log(`Sup share ${supplyShare}`);
+        for (let i = 0; i < this.reserveData.length - 1; i++) {
+          this.reserveData[i] = parseFloat(
+            ethers.utils.formatEther(this.reserveData[i])
+          );
+        }
+        this.multiplierRatio = supplyShare / 100;
+        this.symbols = symbols;
+        // let reserves = this.reserves
+        // console.log(`Reserves: ${JSON.stringify(reserves)}`)
+        console.log(symbols);
+      }
+    },
     call(contract, method, args, out = "number") {
       let key = this.drizzleInstance.contracts[contract].methods[
         method
@@ -369,14 +416,18 @@ export default {
       try {
         value = this.contractInstances[contract][method][key].value;
       } catch (error) {
+        // console.log(`${contract} ${error}`)
         value = null;
       }
+      // if(value == null) return null;
+      // console.log(`Value ${value.toString()}`)
       switch (out) {
         case "number":
           if (value === null) value = 0;
           return ethers.BigNumber.from(value);
         case "address":
-          return value;
+          if (value === null) value = "";
+          return value.toString();
         default:
           return value;
       }
@@ -409,24 +460,59 @@ export default {
       return this.call("Vault", "totalAssets", []);
     },
     vault_available_limit() {
-      if (this.config.VAULT_STATUS == 'active' || this.config.VAULT_STATUS == '') {
+      if (
+        this.config.VAULT_STATUS == "active" ||
+        this.config.VAULT_STATUS == ""
+      ) {
         return this.call("Vault", "availableDepositLimit", []);
       } else {
         return BN_ZERO;
       }
     },
     vault_total_aum() {
-      let toFloat = ethers.BigNumber.from(10).pow(16).toString();
-      let numAum = this.vault_total_assets.div(toFloat).toNumber();
-      return (numAum / 100) * this.want_price;
+      if (this.want_price > 0) {
+        let toFloat = ethers.BigNumber.from(10).pow(16).toString();
+        let numAum = this.vault_total_assets.div(toFloat).toNumber();
+        return (numAum / 100) * this.want_price;
+      } else {
+        return 0;
+      }
     },
     vault_price_per_share() {
       return this.call("Vault", "pricePerShare", []);
     },
+    vault_net_deposited_num() {
+      let currVaultShares = this.$options.filters.fromWeiToFloat(
+        this.yvtoken_balance
+      );
+      let curPricePerShare = this.$options.filters.fromWeiToFloat(
+        this.vault_price_per_share
+      );
+      return currVaultShares * curPricePerShare;
+    },
+    lpSupply() {
+      return this.call("wantPair", "totalSupply", []);
+    },
+    reserves() {
+      return this.call("wantPair", "getReserves", [], "stringx");
+    },
+    token0() {
+      return this.call("wantPair", "token0", [], "address");
+    },
+    token1() {
+      return this.call("wantPair", "token1", [], "address");
+    },
+    get_vault_lpAssets() {
+      let reserveInfo = {
+        token0Symbol: this.symbols[0],
+        token1Symbol: this.symbols[1],
+        token0InVault: this.reserveData[0] * this.multiplierRatio,
+        token1InVault: this.reserveData[1] * this.multiplierRatio,
+      };
+      return reserveInfo;
+    },
     vault_net_deposited() {
-      let currVaultShares = this.$options.filters.fromWeiToFloat(this.yvtoken_balance)
-      let curPricePerShare = this.$options.filters.fromWeiToFloat(this.vault_price_per_share)
-      return  (currVaultShares * curPricePerShare).toLocaleString()
+      return this.vault_net_deposited_num.toLocaleString();
     },
     vault_decimals() {
       return this.call("Vault", "decimals", []);
@@ -441,7 +527,11 @@ export default {
       return this.activeBalance;
     },
     progress_limit() {
-      return (this.vault_deposit_limit.isZero() ? 0: (this.vault_deposit_limit - this.vault_available_limit) / this.vault_deposit_limit *100);
+      return this.vault_deposit_limit.isZero()
+        ? 0
+        : ((this.vault_deposit_limit - this.vault_available_limit) /
+            this.vault_deposit_limit) *
+            100;
     },
     yfi_needed() {
       return this.entrance_cost.sub(this.total_yfi);
@@ -452,13 +542,13 @@ export default {
         this.vault,
       ]).isZero();
     },
-    get_daily_apy(){
+    get_daily_apy() {
       return this.roi != undefined ? (this.roi / 7).toFixed(3) : 0;
     },
-    get_weekly_apy(){
+    get_weekly_apy() {
       return this.roi != undefined ? this.roi.toFixed(3) : 0;
     },
-    get_yearly_apy(){
+    get_yearly_apy() {
       return this.roi_year != undefined ? this.roi_year.toFixed(3) : 0;
     },
     has_allowance_vault() {
@@ -476,101 +566,64 @@ export default {
   },
   async created() {
     if (this.chainId && this.config.CHAIN_ID !== this.chainId) {
-      window.location.href = '/'
+      window.location.href = "/";
     }
-    axios
-      .get(
-        "https://api.coingecko.com/api/v3/simple/price?ids=" +
-          this.config.COINGECKO_SYMBOL.toLowerCase() +
-          "&vs_currencies=usd"
-      )
-      .then((response) => {
-        this.want_price = response.data[this.config.COINGECKO_SYMBOL.toLowerCase()].usd;
-      });
+    if (this.config.COINGECKO_SYMBOL != "")
+      axios
+        .get(
+          "https://api.coingecko.com/api/v3/simple/price?ids=" +
+            this.config.COINGECKO_SYMBOL.toLowerCase() +
+            "&vs_currencies=usd"
+        )
+        .then((response) => {
+          this.want_price =
+            response.data[this.config.COINGECKO_SYMBOL.toLowerCase()].usd;
+        });
 
     //Active account is defined?
     if (this.activeAccount !== undefined) this.load_reverse_ens();
 
     let Vault = new web3.eth.Contract(yVaultV2, this.vault);
-    console.log(Vault);
     this.get_strategies(Vault);
-        this.is_guest = true;
-
-    // Get GuestList contract and use it :)
-    // Vault.methods.guestList().call().then((response) => {
-    //     console.log(response)
-    //     if (response == ADDRESS_ZERO) {
-    //       //if there's not guest list, everyone is a guest ;)
-    //       console.log("No guest list. Everyone is invited!");
-    //       this.total_yfi = this.entrance_cost;
-    //     } else {
-    //       this.contractGuestList = new web3.eth.Contract(GuestList, response);
-
-    //       this.contractGuestList.methods
-    //         .guests(this.activeAccount)
-    //         .call()
-    //         .then((response) => {
-    //           this.is_guest = response;
-    //         });
-
-    //       this.contractGuestList.methods.total_yfi(this.activeAccount).call().then((response) => {
-    //         console.log("Total YFI: " + response.toString());
-    //         this.total_yfi = ethers.BigNumber.from(response.toString());
-    //       });
-
-    //     Vault.methods.activation().call().then((vault_activation) => {
-    //         this.contractGuestList.methods
-    //           .entrance_cost(vault_activation)
-    //           .call()
-    //           .then((response) => {
-    //             console.log("Entrance cost: " + response.toString());
-    //             this.entrance_cost = ethers.BigNumber.from(
-    //               response.toString()
-    //             );
-    //           });
-    //       });
-    //     this.contractGuestList.methods
-    //       .bribe_cost()
-    //       .call()
-    //       .then((response) => {
-    //         console.log("Bribe cost: " + response.toString());
-    //         this.bribe_cost = ethers.BigNumber.from(response.toString());
-    //       });
-    //     }
-    //   });
+    this.is_guest = true;
 
     // Get blocknumber and calc APY
-    Vault.methods.pricePerShare().call().then( currentPrice => {
-      const seconds_in_a_year = 3.154e+7;
-      const now = Math.round(Date.now() / 1000);
-      Vault.methods.activation().call().then(activationTime => {
-      // 1 week ago
-      const one_week_ago = (now - 60 * 60 * 24 * 7);
-      const ts_past = one_week_ago < activationTime?activationTime:one_week_ago;
+    Vault.methods
+      .pricePerShare()
+      .call()
+      .then((currentPrice) => {
+        const seconds_in_a_year = 3.154e7;
+        const now = Math.round(Date.now() / 1000);
+        Vault.methods
+          .activation()
+          .call()
+          .then((activationTime) => {
+            // 1 week ago
+            const one_week_ago = now - 60 * 60 * 24 * 7;
+            const ts_past =
+              one_week_ago < activationTime ? activationTime : one_week_ago;
 
-      const ts_diff = now - ts_past;
+            const ts_diff = now - ts_past;
 
-      console.log("TS Past: " + one_week_ago);
-      console.log("TS Activation: " + activationTime);
-          //TODO reference central api instead for apy
-          let pastPrice = this.config.WANT_SYMBOL == "KUS" ? 10 * 1e18: 1e18;
-          if(currentPrice > pastPrice) {
-            console.log(`Pas price = ${pastPrice}`)
-            let roi = (currentPrice / pastPrice - 1) * 100;
-            console.log("Current Price: " + currentPrice);
-            console.log("Past Price: " + pastPrice);
-            this.roi = roi
-            this.roi_year = roi/ts_diff*seconds_in_a_year;
-            console.log("ROI week: " + roi);
-            console.log("ROI year: " + this.roi_year);
-          }
-          else {
-            this.roi = 0;
-            this.roi_year = 0;
-          }
-      })
-
-    });
+            console.log("TS Past: " + one_week_ago);
+            console.log("TS Activation: " + activationTime);
+            //TODO reference central api instead for apy
+            let pastPrice = this.config.WANT_SYMBOL == "KUS" ? 10 * 1e18 : 1e18;
+            if (currentPrice > pastPrice) {
+              console.log(`Pas price = ${pastPrice}`);
+              let roi = (currentPrice / pastPrice - 1) * 100;
+              console.log("Current Price: " + currentPrice);
+              console.log("Past Price: " + pastPrice);
+              this.roi = roi;
+              this.roi_year = (roi / ts_diff) * seconds_in_a_year;
+              console.log("ROI week: " + roi);
+              console.log("ROI year: " + this.roi_year);
+            } else {
+              this.roi = 0;
+              this.roi_year = 0;
+            }
+          });
+      });
     // Iterate through strats
   },
 };

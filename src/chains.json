@@ -23,5 +23,10 @@
     "name": "KCS Mainnet",
     "coin": "KCS",
     "block_explorer": "https://explorer.kcc.io/en"
+  },
+  "66": {
+    "name": "OkEX Mainnet",
+    "coin": "OKT",
+    "block_explorer": "https://www.oklink.com/okexchain"
   }
 }

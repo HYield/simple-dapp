@@ -15,42 +15,39 @@
 </template>
 
 <script>
-
 export default {
-	name: "InfoMessage",
-	props: ['status'],
-	data() {
-		return {
-			message_type: '',
-		}
-	},
+  name: "InfoMessage",
+  props: ["status"],
+  data() {
+    return {
+      message_type: "",
+    };
+  },
 
-	computed: {},
-	created() {
-		switch(this.status) {
-			case 'withdraw':
-				this.message_type = 'is-danger';
-				break;
-			case 'use_production':
-				this.message_type = 'is-info';
-				break;
-			default:
-				this.message_type = '';
-			}
-	},
-
-}
-
+  computed: {},
+  created() {
+    switch (this.status) {
+      case "withdraw":
+        this.message_type = "is-danger";
+        break;
+      case "use_production":
+        this.message_type = "is-info";
+        break;
+      default:
+        this.message_type = "";
+    }
+  },
+};
 </script>
 <style>
 .tag {
-	margin-left: 1em;
+  margin-left: 1em;
 }
 a strong {
-	color: blue !important;
+  color: blue !important;
 }
 
 a strong:hover {
-	color: black !important;
+  color: black !important;
 }
 </style>

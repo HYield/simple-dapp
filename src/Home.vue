@@ -26,17 +26,16 @@ export default {
   props: ["allConfig", "chainId", "chainCoin"],
   data() {
     return {
-      items: Object.keys(this.allConfig)
-        .map((key) => ({
-          ...this.allConfig[key],
-          URL: key,
-        }))
+      items: Object.keys(this.allConfig).map((key) => ({
+        ...this.allConfig[key],
+        URL: key,
+      })),
     };
   },
   filters: {},
   methods: {},
   computed: {
-    ...mapGetters('drizzle', ['drizzleInstance']),
+    ...mapGetters("drizzle", ["drizzleInstance"]),
     yearnVaults() {
       var items = this.items;
 

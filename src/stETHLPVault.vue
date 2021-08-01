@@ -121,12 +121,11 @@ div(v-else)
 </template>
 
 <script>
-
 import { mapGetters } from "vuex";
 import ethers from "ethers";
 import axios from "axios";
-import ProgressBar from './components/ProgressBar';
-import InfoMessage from './components/InfoMessage';
+import ProgressBar from "./components/ProgressBar";
+import InfoMessage from "./components/InfoMessage";
 import GuestList from "./abi/GuestList.json";
 import ZapSteth from "./abi/ZapSteth.json";
 import yVaultV2 from "./abi/yVaultV2.json";
@@ -154,7 +153,7 @@ export default {
     ProgressBar,
     InfoMessage,
   },
-  props: ['config'],
+  props: ["config"],
   data() {
     return {
       username: null,
@@ -182,7 +181,9 @@ export default {
       if (decimals === undefined) decimals = 18;
       if (data === "loading") return data;
       if (data > 2 ** 255) return "♾️";
-      let value = ethers.utils.commify(ethers.utils.formatUnits(data, decimals));
+      let value = ethers.utils.commify(
+        ethers.utils.formatUnits(data, decimals)
+      );
       let parts = value.split(".");
 
       if (precision === 0) return parts[0];
@@ -204,8 +205,8 @@ export default {
       return `${(data * 100).toFixed(precision)}%`;
     },
     toCurrency(data, precision) {
-      if ( !data ) return "-";
-      
+      if (!data) return "-";
+
       if (typeof data !== "number") {
         data = parseFloat(data);
       }
@@ -242,7 +243,9 @@ export default {
       }
 
       this.drizzleInstance.contracts["Vault"].methods["deposit"].cacheSend(
-        ethers.utils.parseUnits(this.amount.toString(), this.vault_decimals).toString(),
+        ethers.utils
+          .parseUnits(this.amount.toString(), this.vault_decimals)
+          .toString(),
         {
           from: this.activeAccount,
         }
@@ -257,14 +260,11 @@ export default {
         return;
       }
 
-      console.log(this.slippage*100);
-      this.contractZapIn.methods.zapEthIn(this.slippage*100).send( 
-        { 
-          from: this.activeAccount,
-          value: ethers.utils.parseEther(this.amount_eth.toString()).toString() 
-        }
-      );
-
+      console.log(this.slippage * 100);
+      this.contractZapIn.methods.zapEthIn(this.slippage * 100).send({
+        from: this.activeAccount,
+        value: ethers.utils.parseEther(this.amount_eth.toString()).toString(),
+      });
     },
     on_deposit_all() {
       if (this.want_balance <= 0) {
@@ -337,7 +337,9 @@ export default {
       }
     },
     get_block_timestamp(timestamp) {
-      return axios.get(`https://api.bscscan.com/api?module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before&apikey=JXRIIVMTAN887F9D7NCTVQ7NMGNT1A4KA3`)      
+      return axios.get(
+        `https://api.bscscan.com/api?module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before&apikey=JXRIIVMTAN887F9D7NCTVQ7NMGNT1A4KA3`
+      );
     },
     call(contract, method, args, out = "number") {
       let key = this.drizzleInstance.contracts[contract].methods[
@@ -387,7 +389,9 @@ export default {
       return this.call("Vault", "availableDepositLimit", []);
     },
     vault_total_aum() {
-      let toFloat = new ethers.BigNumber.from(10).pow(this.vault_decimals.sub(2)).toString();
+      let toFloat = new ethers.BigNumber.from(10)
+        .pow(this.vault_decimals.sub(2))
+        .toString();
       let numAum = this.vault_total_assets.div(toFloat).toNumber();
       return (numAum / 100) * this.want_price;
     },
@@ -407,7 +411,10 @@ export default {
       return this.activeBalance;
     },
     progress_limit() {
-      return (this.vault_deposit_limit.isZero()?0:(this.vault_deposit_limit - this.vault_available_limit) / this.vault_deposit_limit);
+      return this.vault_deposit_limit.isZero()
+        ? 0
+        : (this.vault_deposit_limit - this.vault_available_limit) /
+            this.vault_deposit_limit;
     },
     yfi_needed() {
       return this.entrance_cost.sub(this.total_yfi);
@@ -439,21 +446,28 @@ export default {
           "&vs_currencies=usd"
       )
       .then((response) => {
-        this.want_price = response.data[this.config.COINGECKO_SYMBOL.toLowerCase()].usd;
+        this.want_price =
+          response.data[this.config.COINGECKO_SYMBOL.toLowerCase()].usd;
       });
 
     //Active account is defined?
     if (this.activeAccount !== undefined) this.load_reverse_ens();
-     
+
     // Zap In Contract
-    this.contractZapIn = new web3.eth.Contract(ZapSteth, '0x15e5405B90Abba31F29c618f9dC8D65E95257660');
+    this.contractZapIn = new web3.eth.Contract(
+      ZapSteth,
+      "0x15e5405B90Abba31F29c618f9dC8D65E95257660"
+    );
 
     let Vault = new web3.eth.Contract(yVaultV2, this.vault);
     console.log(Vault);
     this.get_strategies(Vault);
 
     // Get GuestList contract and use it :)
-    Vault.methods.guestList().call().then((response) => {
+    Vault.methods
+      .guestList()
+      .call()
+      .then((response) => {
         if (response == ADDRESS_ZERO) {
           //if there's not guest list, everyone is a guest ;)
           console.log("No guest list. Everyone is invited!");
@@ -470,12 +484,18 @@ export default {
             });
         }
 
-        this.contractGuestList.methods.total_yfi(this.activeAccount).call().then((response) => {
+        this.contractGuestList.methods
+          .total_yfi(this.activeAccount)
+          .call()
+          .then((response) => {
             console.log("Total YFI: " + response.toString());
             this.total_yfi = new ethers.BigNumber.from(response.toString());
           });
 
-        Vault.methods.activation().call().then((vault_activation) => {
+        Vault.methods
+          .activation()
+          .call()
+          .then((vault_activation) => {
             this.contractGuestList.methods
               .entrance_cost(vault_activation)
               .call()
@@ -497,31 +517,40 @@ export default {
       });
 
     // Get blocknumber and calc APY
-    Vault.methods.pricePerShare().call().then( currentPrice => {
-      const seconds_in_a_year = 31536000;
-      const now = Math.round(Date.now() / 1000);
+    Vault.methods
+      .pricePerShare()
+      .call()
+      .then((currentPrice) => {
+        const seconds_in_a_year = 31536000;
+        const now = Math.round(Date.now() / 1000);
 
-      // 1 week ago
-      const one_week_ago = (now - 60 * 60 * 24 * 7);
-      const ts_past = one_week_ago < this.config.BLOCK_ACTIVATED?this.config.BLOCK_ACTIVATED:one_week_ago;
+        // 1 week ago
+        const one_week_ago = now - 60 * 60 * 24 * 7;
+        const ts_past =
+          one_week_ago < this.config.BLOCK_ACTIVATED
+            ? this.config.BLOCK_ACTIVATED
+            : one_week_ago;
 
-      const ts_diff = now - ts_past;
+        const ts_diff = now - ts_past;
 
-      console.log("TS Past: " + one_week_ago);
-      console.log("TS Activation: " + this.config.BLOCK_ACTIVATED);
+        console.log("TS Past: " + one_week_ago);
+        console.log("TS Activation: " + this.config.BLOCK_ACTIVATED);
 
-      this.get_block_timestamp(ts_past).then(response => {
-        console.log("Past block: " + response.data.result);
-        Vault.methods.pricePerShare().call({}, response.data.result).then( pastPrice => {
-          let roi = (currentPrice / pastPrice - 1) * 100;
-          console.log("Current Price: " + currentPrice);
-          console.log("Past Price: " + pastPrice);
-          this.roi_week = roi/ts_diff*seconds_in_a_year;
-          console.log("ROI week: " + roi);
-          console.log("ROI year: " + this.roi_week);
+        this.get_block_timestamp(ts_past).then((response) => {
+          console.log("Past block: " + response.data.result);
+          Vault.methods
+            .pricePerShare()
+            .call({}, response.data.result)
+            .then((pastPrice) => {
+              let roi = (currentPrice / pastPrice - 1) * 100;
+              console.log("Current Price: " + currentPrice);
+              console.log("Past Price: " + pastPrice);
+              this.roi_week = (roi / ts_diff) * seconds_in_a_year;
+              console.log("ROI week: " + roi);
+              console.log("ROI year: " + this.roi_week);
+            });
         });
       });
-    });
 
     // Iterate through strats
   },
