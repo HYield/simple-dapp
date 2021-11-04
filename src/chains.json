@@ -28,5 +28,15 @@
     "name": "OkEX Mainnet",
     "coin": "OKT",
     "block_explorer": "https://www.oklink.com/okexchain"
+  },
+  "43114": {
+    "name": "AVAX Mainnet",
+    "coin": "AVAX",
+    "block_explorer": "https://cchain.explorer.avax.network/"
+  },
+  "1666600000": {
+    "name": "Harmony Mainnet Shard 0",
+    "coin": "ONE",
+    "block_explorer": "https://explorer.harmony.one/"
   }
 }
